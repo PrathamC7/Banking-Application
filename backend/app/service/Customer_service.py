@@ -23,7 +23,7 @@ class Customer_service :
         balance = self.repository.get_current_balance(email)
         if balance is None :
             raise HTTPException(status_code=400, detail="Customer not found ")
-        return balance
+        return {"balance" : balance}
     def register_customer(self, customer : CustomerRegistration) :
         new_customer = self.repository.register_customer(customer) 
         if new_customer is None :
@@ -40,4 +40,4 @@ class Customer_service :
         if not verify_password(customer.password , CustomerloggedIn.password) :
             raise HTTPException(status_code=400,
                                 detail="Incorrect Password")
-        return encode_token(CustomerloggedIn.id, CustomerloggedIn.user_role.role.value)
+        return encode_token(CustomerloggedIn.id, CustomerloggedIn.user_role.role.value, customer.email)

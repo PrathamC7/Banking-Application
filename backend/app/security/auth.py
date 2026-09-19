@@ -9,7 +9,9 @@ def get_token(credentials = Depends(security)) :
     return credentials.credentials
 
 def decode_token(token :str) :
-    return jwt.decode(token, SECRET_KEY,algorithms=[ALGORITHM])
+    
+    token = jwt.decode(token, SECRET_KEY,algorithms=[ALGORITHM])
+    return token
 
 def get_current_user(token : str = Depends(get_token)) :
     try :

@@ -7,16 +7,15 @@ from app.schemas.TransactionCreate import TransactionCreate
 from app.security.auth import get_current_user
 router = APIRouter()
 
+# GET CUSTOMER LIST OF TRANSACTION
+@router.get("/", response_model = list[TransactionResponse])
+def get_transaction(db : Session = Depends(get_db), token = Depends(get_current_user)) :
+    return Transaction_service(db).get_transaction_by_customer_id(token["sub"])
+# GET TRANSACTION BY TRANSACTION ID
+@router.get("/", response_model = TransactionResponse)
+def get_transaction( db : Session = Depends(get_db), token = Depends(get_current_user)) :
+    return Transaction_service(db).get_transaction_by_id(token["sub"])
+
 @router.post("/", response_model = TransactionResponse)
 def add_transaction(transaction : TransactionCreate, db : Session = Depends(get_db),  token = Depends(get_current_user)) :
     return Transaction_service(db).addTransaction(transaction)
-
-
-# GET CUSTOMER LIST OF TRANSACTION
-@router.get("/", response_model = list[TransactionResponse])
-def get_transaction(id : int, db : Session = Depends(get_db)) :
-    return Transaction_service(db).get_transaction_by_customer_id(id)
-# GET TRANSACTION BY TRANSACTION ID
-@router.get("/{id}", response_model = TransactionResponse)
-def get_transaction(id : int, db : Session = Depends(get_db)) :
-    return Transaction_service(db).get_transaction_by_id(id)

@@ -14,8 +14,8 @@ def customer_profile(email : str, db : Session = Depends(get_db), token = Depend
 def customer_balance(email : str, db : Session = Depends(get_db),token = Depends(get_current_user)) :
     return Customer_service(db).customer_balance(email)
 # GET CUSTOMER LIST OF TRANSACTION
-@router.get("/tranasaction", response_model = list[TransactionResponse])
-def get_transaction(id : int, db : Session = Depends(get_db)) :
+@router.get("/tranasaction/customer/{id}", response_model = list[TransactionResponse])
+def get_transaction(db : Session = Depends(get_db)) :
     return Transaction_service(db).get_transaction_by_customer_id(id)
 # GET TRANSACTION BY TRANSACTION ID
 @router.get("/transaction/{id}", response_model = TransactionResponse)
