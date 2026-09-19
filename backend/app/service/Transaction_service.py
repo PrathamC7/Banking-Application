@@ -29,7 +29,11 @@ class Transaction_service :
         return new_transaction
     
     def get_transaction_by_customer_id(self, id : int) :
-        return self.transaction_repo.get_transaction_by_customer_id(id) 
+        list_transaction = self.transaction_repo.get_transaction_by_customer_id(id) 
+        if len(list_transaction) == 0 : raise HTTPException(status_code  = 400,detail = f"Transaction not present for the customer with id {id}")
+        return list_transaction
     
     def get_transaction_by_id(self, id : int) :
-        return self.transaction_repo.get_transaction_by_id(id) 
+        transaction = self.transaction_repo.get_transaction_by_id(id) 
+        if transaction is None : raise HTTPException(status_code  = 400,detail = "Transaction not present")
+        return transaction

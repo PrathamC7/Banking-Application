@@ -13,4 +13,4 @@ class Transaction(Base) :
     amount : Mapped[Decimal] = mapped_column(Numeric(19,5), nullable = False)
     date : Mapped[datetime] = mapped_column(server_default = func.now(), nullable = False )
     customer : Mapped["Customer"] = relationship(back_populates = "transactions")
-    
+     

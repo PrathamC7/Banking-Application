@@ -1,6 +1,7 @@
 from app.extensions import Base
 from decimal import Decimal
 from app.models.Transaction import Transaction
+from app.models.User_role import UserRole
 from sqlalchemy import String, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 class Customer(Base) :
@@ -11,3 +12,4 @@ class Customer(Base) :
     password : Mapped[str] = mapped_column(String(255), nullable = False)
     balance : Mapped[Decimal] = mapped_column(Numeric(19, 4), nullable = False)
     transactions : Mapped[list["Transaction"]] = relationship(back_populates = "customer") # customer reffers to attribute mentioned in Transaction Class
+    user_role : Mapped[UserRole] = relationship(back_populates = "customer", uselist = False)

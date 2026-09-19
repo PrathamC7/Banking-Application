@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from app.api.routes.customer_routes import router as customer_router
+from app.api.routes.admin_routes import router as admin_router
 from app.api.routes.transaction_routes import router as transaction_router 
 from app.api.routes.Auth import router as auth_router
 
 app = FastAPI()
 app.include_router(
-    customer_router,
-    prefix="/customer"
+    admin_router,
+    prefix="/admin"
 )
 app.include_router(
     transaction_router,

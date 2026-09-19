@@ -4,8 +4,10 @@ from app.schemas.CustomerRegistrationResponse import CustomerRegistrationRespons
 from app.schemas.CustomerVerifyRequest import  CustomerVerifyRequest
 from app.security.password import verify_password
 from app.schemas.CustomerRegistrationResponse import CustomerRegistrationResponse
-from app.schemas.CustomerVerificationResponse import CustomerVerificationResponse
+from app.schemas.CustomerResponse import CustomerResponse
+from app.models.Customer import Customer
 from app.security.jwt import encode_token
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 class Customer_service :
@@ -13,10 +15,10 @@ class Customer_service :
         self.repository =  Customer_repository(db)
     
     def get_customer_profile(self, email):
-        customer = self.repository.get_customer_profile(email)
+        customer : Customer = self.repository.get_customer_profile(email)
         if customer is None :
             raise HTTPException(status_code=400, detail="Customer not found ")
-        return customer
+        return CustomerResponse(id = customer.id, name = customer.name, email = customer.email, balance = customer.balance, role = customer.user_role.role)
     def customer_balance(self, email) :
         balance = self.repository.get_current_balance(email)
         if balance is None :
@@ -38,4 +40,4 @@ class Customer_service :
         if not verify_password(customer.password , CustomerloggedIn.password) :
             raise HTTPException(status_code=400,
                                 detail="Incorrect Password")
-        return encode_token(CustomerloggedIn.id)
+        return encode_token(CustomerloggedIn.id, CustomerloggedIn.user_role.role.value)

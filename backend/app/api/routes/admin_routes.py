@@ -1,22 +1,23 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.extensions import get_db
+from app.service.Customer_service import Customer_service
 from app.service.Transaction_service import Transaction_service
 from app.schemas.TransactionResponse import TransactionResponse
-from app.schemas.TransactionCreate import TransactionCreate
 from app.security.auth import get_current_user
 router = APIRouter()
 
-@router.post("/", response_model = TransactionResponse)
-def add_transaction(transaction : TransactionCreate, db : Session = Depends(get_db),  token = Depends(get_current_user)) :
-    return Transaction_service(db).addTransaction(transaction)
-
-
+@router.get("/customer/{email}")
+def customer_profile(email : str, db : Session = Depends(get_db), token = Depends(get_current_user)):
+    return Customer_service(db).get_customer_profile(email)
+@router.get("/customer/balance/{email}")
+def customer_balance(email : str, db : Session = Depends(get_db),token = Depends(get_current_user)) :
+    return Customer_service(db).customer_balance(email)
 # GET CUSTOMER LIST OF TRANSACTION
-@router.get("/", response_model = list[TransactionResponse])
+@router.get("/tranasaction", response_model = list[TransactionResponse])
 def get_transaction(id : int, db : Session = Depends(get_db)) :
     return Transaction_service(db).get_transaction_by_customer_id(id)
 # GET TRANSACTION BY TRANSACTION ID
-@router.get("/{id}", response_model = TransactionResponse)
+@router.get("/transaction/{id}", response_model = TransactionResponse)
 def get_transaction(id : int, db : Session = Depends(get_db)) :
     return Transaction_service(db).get_transaction_by_id(id)

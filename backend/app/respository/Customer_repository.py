@@ -7,8 +7,10 @@ from app.schemas.CustomerVerifyRequest import CustomerVerifyRequest
 from app.schemas.CustomerRegistration import CustomerRegistration
 from app.security.password import hash_password
 class Customer_repository:
+    
     def __init__(self, db : Session) :
         self.db = db
+        
     def get_customer_profile(self, email : str) :
         stmt = select(Customer).where(Customer.email == email)
         customer =  self.db.execute(stmt).scalar_one_or_none()
