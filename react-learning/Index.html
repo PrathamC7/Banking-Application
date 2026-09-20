@@ -1,0 +1,12 @@
+<h2 id = "balance">100000</h2>
+<button onclick="withdraw()">
+    withdraw $1000
+</button>
+
+<script>
+    let balance = 10000;
+    function withdraw() {
+        balance = balance - 1000;
+        document.getElementById("balance").innerText = balance
+    }
+</script>

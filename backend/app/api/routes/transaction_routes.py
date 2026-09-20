@@ -12,7 +12,7 @@ router = APIRouter()
 def get_transaction(db : Session = Depends(get_db), token = Depends(get_current_user)) :
     return Transaction_service(db).get_transaction_by_customer_id(token["sub"])
 # GET TRANSACTION BY TRANSACTION ID
-@router.get("/", response_model = TransactionResponse)
+@router.get("/me/list", response_model = TransactionResponse)
 def get_transaction( db : Session = Depends(get_db), token = Depends(get_current_user)) :
     return Transaction_service(db).get_transaction_by_id(token["sub"])
 

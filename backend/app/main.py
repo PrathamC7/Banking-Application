@@ -11,7 +11,7 @@ app.include_router(
 )
 app.include_router(
     transaction_router,
-    prefix="/transaction"
+    prefix="/customer/transaction"
 )
 app.include_router(
     auth_router,
