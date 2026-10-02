@@ -3,8 +3,19 @@ from app.api.routes.admin_routes import router as admin_router
 from app.api.routes.transaction_routes import router as transaction_router 
 from app.api.routes.Auth import router as auth_router
 from app.api.routes.customer_routes import router as customer_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["Authorization"]
+)
 app.include_router(
     admin_router,
     prefix="/admin"
