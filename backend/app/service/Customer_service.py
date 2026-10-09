@@ -20,6 +20,7 @@ class Customer_service :
             raise HTTPException(status_code=400, detail="Customer not found ")
         return CustomerResponse(id = customer.id, name = customer.name, email = customer.email, balance = customer.balance, role = customer.user_role.role)
     def customer_balance(self, email) :
+        # raise HTTPException(status_code=400, detail="Customer not found ")
         balance = self.repository.get_current_balance(email)
         if balance is None :
             raise HTTPException(status_code=400, detail="Customer not found ")

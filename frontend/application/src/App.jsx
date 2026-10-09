@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import Customer from "./components/customer/Customer";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
+import BalanceCard from "./components/customer/BalanceCard";
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
         <BankingProvider>
 
                     <Routes>
-
+                        <Route path = "balance" element = {<BalanceCard/>}/>
                         {/* Public */}
                         <Route
                             path="/login"
