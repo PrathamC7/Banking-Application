@@ -7,9 +7,9 @@ import App from './App'
 
 import AuthenticationProvider from "./context/AuthContext";
 
+
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-
             <AuthenticationProvider>
                <StrictMode>
                   <App/>

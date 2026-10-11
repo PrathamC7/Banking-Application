@@ -8,8 +8,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate()
-    const { setIsAuthenticated } = useContext(AuthContext);
-
+    const { setIsAuthenticated, setUserDetail } = useContext(AuthContext);
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -22,10 +21,14 @@ function Login() {
                 "token",
                 response.headers.authorization
             );
-            
+            console.log("Login response:", response.data);
+            console.log("Before update:", response.data.customer);
+
+            setUserDetail(response.data.customer);
             setIsAuthenticated(true);
-            toast.success("Login Successfull")
-            navigate("/dashboard")
+
+            console.log("After setter called:", response.data.customer);
+            navigate("/withdraw")
         }
         catch (error) {
             console.log("Error object:", {...error});

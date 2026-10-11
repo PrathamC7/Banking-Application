@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
-
 import BankingProvider from "./context/BankingContext";
 
 import Login from "./pages/Login";
 import Dashboard from "./components/Dashboard";
 import Customer from "./components/customer/Customer";
+import WithdrawForm from './components/customer/WithdrawForm'
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import BalanceCard from "./components/customer/BalanceCard";
@@ -16,7 +16,6 @@ function App() {
         <BankingProvider>
 
                     <Routes>
-                        <Route path = "balance" element = {<BalanceCard/>}/>
                         {/* Public */}
                         <Route
                             path="/login"
@@ -32,7 +31,17 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-
+                        <Route
+                            path="/withdraw"
+                            element={
+                                <ProtectedRoute>
+                                    <BankingProvider>
+                                        <WithdrawForm />
+                                    </BankingProvider>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route path = "balance" element = {<ProtectedRoute><BalanceCard/></ProtectedRoute>}/>
                         <Route
                             path="/customer"
                             element={

@@ -13,8 +13,8 @@ def register(customer : CustomerRegistration, db : Session = Depends(get_db)) :
 
 @router.post('/')
 def login(customer : CustomerVerifyRequest, response : Response, db : Session = Depends(get_db)) :
-    token = Customer_service(db).verify_customer(customer)
-    response.headers["Authorization"] = f"Bearer {token}"
-    return {"message" : "Login Successful"}
+    resp = Customer_service(db).verify_customer(customer)
+    response.headers["Authorization"] = f"Bearer {resp["token"]}"
+    return {"message" : "Login Successful", "customer" : resp["customer"]}
     
     

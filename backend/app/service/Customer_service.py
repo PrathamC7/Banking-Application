@@ -41,4 +41,7 @@ class Customer_service :
         if not verify_password(customer.password , CustomerloggedIn.password) :
             raise HTTPException(status_code=400,
                                 detail="Incorrect Password")
-        return encode_token(CustomerloggedIn.id, CustomerloggedIn.user_role.role.value, customer.email)
+        return {"token" : encode_token(CustomerloggedIn.id, CustomerloggedIn.user_role.role.value, customer.email), "customer" : {
+            "id" : CustomerloggedIn.id,
+            "email" : customer.email
+        }}
