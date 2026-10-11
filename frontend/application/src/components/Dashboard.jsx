@@ -1,22 +1,26 @@
-import BalanceCard from "./customer/BalanceCard";
-import WithdrawForm from "./customer/WithdrawForm";
-import {AuthContext} from "../context/AuthContext"
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import BalanceCard from "./customer/BalanceCard";
+import WithdrawForm from "./customer/WithdrawForm";
+import { AuthContext } from "../context/AuthContext";
+
 function Dashboard() {
-    const {isAuthenticated, logout} = useContext(AuthContext)
+    const { userDetail, logout } = useContext(AuthContext);
     const navigate = useNavigate();
-    const handlelogout = ()=>{
+    const handleLogout = () => {
         logout();
-        navigate("/login", {replace : true})
-    }
-    return <>
-                <h1>HELLO</h1>
-                <h1>{isAuthenticated == null?  "Checking" : isAuthenticated == true ? "Loged In" : "Not Logged In"}</h1>
-                <button onClick={handlelogout}>Logout</button>
-                <BalanceCard/>
-                <WithdrawForm/>
-            </>
+        navigate("/login", { replace: true });
+    };
+
+    return (
+        <main>
+            <h1>Account dashboard</h1>
+            <p>Signed in as {userDetail?.email}</p>
+            <button onClick={handleLogout}>Logout</button>
+            <BalanceCard />
+            <WithdrawForm />
+        </main>
+    );
 }
 
-export default Dashboard
+export default Dashboard;

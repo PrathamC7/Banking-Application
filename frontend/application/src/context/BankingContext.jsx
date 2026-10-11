@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect, useContext } from "react";
+import { useState, createContext, useEffect, useContext, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import { AuthContext } from "./AuthContext";
@@ -8,17 +8,16 @@ export const BankingContext = createContext();
 function BankingProvider({ children }) {
     const [balance, setBalance] = useState(null);
     const [loading, setLoading] = useState(true);
-    const {userDetail} = useContext(AuthContext)
+    const { isAuthenticated, userDetail } = useContext(AuthContext);
     const [error, setError] = useState("");
 
-    const fetchBalance = async () => {
+    const fetchBalance = useCallback(async () => {
         setLoading(true);
         setError("");
 
         try {
             const response = await api.get("/customer/");
             setBalance(response.data.balance);
-            toast.success("Balance fetched successfully!");
         } catch (error) {
             const message =
                 error.response?.data?.detail ||
@@ -29,16 +28,16 @@ function BankingProvider({ children }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchBalance();
-        console.log("BankingContext userDetail:", userDetail);
-    }, [userDetail]);
-
-    const deposit = () => {
-        setBalance((current) => current + 1000);
-    };
+        if (isAuthenticated) {
+            fetchBalance();
+        } else {
+            setBalance(null);
+            setLoading(false);
+        }
+    }, [fetchBalance, isAuthenticated]);
 
     const withdraw = async (amount) => {
         if (!Number.isFinite(amount) || amount <= 0) {
@@ -46,30 +45,30 @@ function BankingProvider({ children }) {
             return;
         }
 
+        if (balance == null) {
+            toast.error("Balance is not available. Please refresh and try again.");
+            return;
+        }
         if (amount > balance) {
             toast.error("Not enough balance");
             return;
         }
-        // console.log(userDetail)
         if (!userDetail?.email) {
             toast.error("Customer details are unavailable. Please log in again.");
             return;
         }
-        try{
-            const response = await api.post("/customer/transaction", {email : userDetail["email"], description : "string", transaction_type : "WITHDRAW", "amount" : amount});
-            // console.log(response.data.amount)
-            setBalance(response?.data?.amount)
+        try {
+            await api.post("/customer/transaction/", {
+                email: userDetail.email,
+                description: "Withdrawal",
+                transaction_type: "WITHDRAW",
+                amount,
+            });
             await fetchBalance();
-            toast.success("amount withdrawn successfull");
+            toast.success("Withdrawal completed.");
+        } catch (error) {
+            toast.error(error.response?.data?.detail || "Withdrawal failed.");
         }
-        catch(error){
-            toast.error("something went wrong");
-        }
-        // setBalance();
-    };
-
-    const setCustomerBalance = (amount) => {
-        setBalance(amount);
     };
 
     return (
@@ -79,9 +78,7 @@ function BankingProvider({ children }) {
                 loading,
                 error,
                 fetchBalance,
-                deposit,
                 withdraw,
-                setCustomerBalance
             }}
         >
             {children}

@@ -7,31 +7,25 @@ import {toast} from 'react-toastify';
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { setIsAuthenticated, setUserDetail } = useContext(AuthContext);
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await api.post("/auth/", {
-                email: email,
-                password: password
+                email,
+                password,
             });
 
             sessionStorage.setItem(
                 "token",
                 response.headers.authorization
             );
-            console.log("Login response:", response.data);
-            console.log("Before update:", response.data.customer);
-
             setUserDetail(response.data.customer);
+            sessionStorage.setItem("userDetail", JSON.stringify(response.data.customer));
             setIsAuthenticated(true);
-
-            console.log("After setter called:", response.data.customer);
-            navigate("/withdraw")
-        }
-        catch (error) {
-            console.log("Error object:", {...error});
+            navigate("/dashboard");
+        } catch (error) {
             toast.error(error?.response?.data?.detail || "Something went wrong");
         }
     };
@@ -39,15 +33,25 @@ function Login() {
     return (
         <>
             <form onSubmit={handleLogin}>
-                <input
+                <label>
+                    Email
+                    <input
                     type="text"
+                    autoComplete="username"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
-                />
+                    />
+                </label>
 
-                <input
+                <label>
+                    Password
+                    <input
                     type="password"
+                    autoComplete="current-password"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
-                />
+                    />
+                </label>
 
                 <button type="submit" >
                     Submit
